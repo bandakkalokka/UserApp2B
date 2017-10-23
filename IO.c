@@ -26,23 +26,16 @@ void InitCN(void){
  */
 
 void PollCN (void){
-//    if(PB1 && PB2) {
-//        if(tvState == S_COUNTDOWN) {                                    //If both buttons pressed and current state is countdown 
-//            tvState = S_RESET;                                          //Change state to reset
-//        }
-//        else if(tvState ==  S_WAIT_BUTTON_PRESS){                       //If both buttons pressed and current state is wait for button press
-//            delay_onesec();                                           //Change state to countdown
-//            tvState = S_COUNTDOWN;
-//        }
-//    }
-//    else if(PB1 && ~PB2 && tvState ==  S_WAIT_BUTTON_PRESS) {           //If only PushButton1 is pressed and current state is wait for button press
-//        tvState = S_INC_TIMER;                                          //Change state to increment timer
-//        ButtonPressed = 1;
-//    }
-//    else if(PB2 && ~PB1 && tvState ==  S_WAIT_BUTTON_PRESS){           //If only PushButton2 is pressed and current state is wait for button pressed
-//        tvState = S_INC_TIMER;                                         //Change state to increment timer   
-//        ButtonPressed = 2;
-//    }
+    
+    if(PB1 && PB2) {
+        ButtonPressed = BOTH;
+    }
+    else if(PB1 && ~PB2) {           
+        ButtonPressed = PB1;
+    }
+    else if(PB2 && ~PB1) {                                        
+        ButtonPressed = PB2;
+    }
 }
 
 

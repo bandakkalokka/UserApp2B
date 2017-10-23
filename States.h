@@ -25,7 +25,7 @@ extern volatile TvOperation tvState;
  void PowerOff(void);
  void Change_Channel(unsigned char channel_dir);
  void Change_Volume(void);
- void startbit(unsigned int count);
+ void startbit(void);
  void digital_one(void);
  void digital_zero(void);
 

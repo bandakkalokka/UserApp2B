@@ -6,8 +6,7 @@
 
 
 void PowerOn(void){
-  // TODO -- Put code for powering on
-  startbit(1);
+  startbit();
   
   digital_one();
   digital_one();
@@ -50,6 +49,8 @@ void PowerOn(void){
   digital_one();
   
   digital_zero();
+  
+  delay_ms(46);
   
   //DispString("Powering On!");
 }
@@ -72,7 +73,7 @@ void PollLength(void){
   // TODO -- Put code to check the amount of time that both buttons are pressed
 }
 
-void startbit(unsigned int count){
+void startbit(){
     
    while(1){
         if (timer_state)
