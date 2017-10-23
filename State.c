@@ -12,42 +12,42 @@ void PowerOn(void){
   digital_one();
   digital_one();
   digital_zero();
-  
+
   digital_zero();
   digital_zero();
   digital_zero();
   digital_zero();
-  
+
   digital_one();
   digital_one();
   digital_one();
   digital_zero();
-  
+
   digital_zero();
   digital_zero();
   digital_zero();
   digital_zero();
-  
-  digital_zero();
-  digital_one();
-  digital_zero();
-  digital_zero();
-  
-  digital_zero();
-  digital_zero();
-  digital_zero();
-  digital_zero();
-  
-  digital_one();
+
   digital_zero();
   digital_one();
+  digital_zero();
+  digital_zero();
+
+  digital_zero();
+  digital_zero();
+  digital_zero();
+  digital_zero();
+
   digital_one();
-  
+  digital_zero();
+  digital_one();
+  digital_one();
+
   digital_one();
   digital_one();
   digital_one();
   digital_one();
-  
+
   digital_zero();
   
   delay_ms(46);
@@ -70,7 +70,22 @@ void Change_Volume(void){
 
 // Helper functions
 void PollLength(void){
-  // TODO -- Put code to check the amount of time that both buttons are pressed
+  unsigned int count = 0;
+  while (PB1 && PB2)
+  {
+    delay_ms(300);
+    count++;
+
+    if (count >= 10)
+    {
+      tvState = POWER_OFF;
+      return;
+    }
+  }
+  if (tvState == CHANNEL_MODE)
+    tvState = VOLUME_MODE;
+  else
+    tvState = CHANNEL_MODE;
 }
 
 void startbit(){
@@ -102,7 +117,7 @@ void startbit(){
                LATBbits.LATB8 = 0;
                 if (main_timer_done)
                 {
-                    timer_state = 1;   
+                    timer_state = 1;
                     main_timer_done = 0;
                     //LATAbits.LATA4 = 1;
                     break;
@@ -139,7 +154,7 @@ void digital_zero(void) {
                LATBbits.LATB8 = 0;
                 if (main_timer_done)
                 {
-                    timer_state = 1;   
+                    timer_state = 1;
                     main_timer_done = 0;
                     return;
                 }
@@ -175,7 +190,7 @@ void digital_one(void){
                LATBbits.LATB8 = 0;
                 if (main_timer_done)
                 {
-                    timer_state = 1;   
+                    timer_state = 1;
                     main_timer_done = 0;
                     break;
                 }
