@@ -6,66 +6,117 @@
 
 
 void PowerOn(void){
-  startbit();
+//  startbit();
   
-  digital_one();
-  digital_one();
-  digital_one();
-  digital_zero();
-
-  digital_zero();
-  digital_zero();
-  digital_zero();
-  digital_zero();
-
-  digital_one();
-  digital_one();
-  digital_one();
-  digital_zero();
-
-  digital_zero();
-  digital_zero();
-  digital_zero();
-  digital_zero();
-
-  digital_zero();
-  digital_one();
-  digital_zero();
-  digital_zero();
-
-  digital_zero();
-  digital_zero();
-  digital_zero();
-  digital_zero();
-
-  digital_one();
-  digital_zero();
-  digital_one();
-  digital_one();
-
-  digital_one();
-  digital_one();
-  digital_one();
-  digital_one();
-
-  digital_zero();
-  
-  delay_ms(46);
-  
-  //DispString("Powering On!");
+//  digital_one();
+//  digital_one();
+//  digital_one();
+//  digital_zero();
+//
+//  digital_zero();
+//  digital_zero();
+//  digital_zero();
+//  digital_zero();
+//
+//  digital_one();
+//  digital_one();
+//  digital_one();
+//  digital_zero();
+//
+//  digital_zero();
+//  digital_zero();
+//  digital_zero();
+//  digital_zero();
+//
+//  digital_zero();
+//  digital_one();
+//  digital_zero();
+//  digital_zero();
+//
+//  digital_zero();
+//  digital_zero();
+//  digital_zero();
+//  digital_zero();
+//
+//  digital_one();
+//  digital_zero();
+//  digital_one();
+//  digital_one();
+//
+//  digital_one();
+//  digital_one();
+//  digital_one();
+//  digital_one();
+//
+//  digital_zero();
+//  
+//  delay_ms(50);
+ 
 }
+
 void PowerOff(void){
   // TODO -- Put code for powering off
-  DispString("Powering Off!");
+  //DispString("Powering Off!"); 
+    delay_ms(50);
+    
 }
 void Change_Channel(unsigned char channel_dir){
   // TODO -- Put code for increasing channel
-  PollCN();
+    //DispString("Changing Channel");
+    if(!channel_dir) {
+        if(PB1) {                            //If PushButton1 is pressed
+            delay_ms(80);
+            DispString("Channel UP!");
+            delay_ms(50);
+            delay_ms(80);
+        }
+        else {
+            ButtonPressed = NONE;                          
+            CNFlag = 0;
+        }
+    }
+    else {
+        if(PB2) {                            //If PushButton2 is pressed
+            delay_ms(80);
+            DispString("Channel DOWN!");
+            delay_ms(50);
+            delay_ms(80);
+        }
+        else {
+            ButtonPressed = NONE;                          
+            CNFlag = 0;
+        }
+    }
+    
+     delay_ms(50);
   // TODO -- Put code for decreasing channel
 }
-void Change_Volume(void){
-  // TODO -- Put code for increasing volume
-  // TODO -- Put code for decreasing volume
+void Change_Volume(unsigned char volume_dir){
+    //DispString("Change Volume!");
+    if(!volume_dir) {
+        if(PB1) {                            //If PushButton1 is pressed
+            delay_ms(80);
+            DispString("Volume UP!");
+            delay_ms(50);
+            delay_ms(80);
+        }
+        else {
+            ButtonPressed = NONE;                          
+            CNFlag = 0;
+        }
+    }
+    else {
+        if(PB2) {                            //If PushButton2 is pressed
+            delay_ms(80);
+            DispString("Volume DOWN!");
+            delay_ms(50);
+            delay_ms(80);
+        }
+        else {
+            ButtonPressed = NONE;                          
+            CNFlag = 0;
+        }
+    }
 }
 
 // Helper functions
@@ -79,6 +130,8 @@ void PollLength(void){
     if (count >= 10)
     {
       tvState = POWER_OFF;
+      CNFlag = 0;
+      ButtonPressed = NONE;
       return;
     }
   }
@@ -86,6 +139,9 @@ void PollLength(void){
     tvState = VOLUME_MODE;
   else
     tvState = CHANNEL_MODE;
+  
+  ButtonPressed = NONE;
+  CNFlag = 0;
 }
 
 void startbit(){
@@ -119,7 +175,7 @@ void startbit(){
                 {
                     timer_state = 1;
                     main_timer_done = 0;
-                    //LATAbits.LATA4 = 1;
+                    
                     break;
                 }
             }
@@ -195,6 +251,6 @@ void digital_one(void){
                     break;
                 }
             }
-        LATAbits.LATA4 ^= 1;
+        //LATAbits.LATA4 ^= 1;
     }
 }

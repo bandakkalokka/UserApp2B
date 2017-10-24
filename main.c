@@ -71,7 +71,7 @@ unsigned int i;
 volatile unsigned int timer_state = 1;
 volatile ButtonPress ButtonPressed;     // Variable indicates which button was pressed. 0 - None. 1 - PB1. 2 - PB2. 3 - Both.
 volatile TvOperation tvState;           // Variable indicated the current operation mode of the TV
-unsigned int CNflag;
+volatile unsigned int CNFlag;
 
 // MACROS
 #define Nop() {__asm__ volatile ("nop");}
@@ -93,15 +93,19 @@ int main(void) {
     NewClk(8); //
     InitTimer2();
     InitTimer1();
+    InitCN();
     //InitOutComp();
     TRISBbits.TRISB8 = 0;
-    TRISAbits.TRISA4 = 0;
+    TRISAbits.TRISA4 = 1;           // Configured as input
+    TRISBbits.TRISB4 = 1;           // Configured as input
+    TRISAbits.TRISA3 = 0;
+    LATAbits.LATA3 = 0;
     LATBbits.LATB8 = 0;
-    LATAbits.LATA4 = 0;
+    //LATAbits.LATA4 = 0;
     
     tvState = IDLE;
     ButtonPressed = NONE;
-    
+    CNFlag = 0;
     main_timer_done = 0;
     
     
@@ -110,43 +114,58 @@ int main(void) {
         switch (tvState)
         {
             case IDLE:
-                Idle();
-                if (CNflag)
-                {
-                  CNflag = 0;
+                if (CNFlag)
+                { 
+                  delay_ms(100);
                   PollCN();
+                  CNFlag = 0;
                   if (ButtonPressed == BOTH)
+                  {
                     tvState = POWER_ON;
+                    ButtonPressed = NONE;
+                  }
+                }
+                else {
+                    Sleep();
                 }
                 break;
       
             case POWER_ON:
+                DispString("Powering On!");
+                IEC1bits.CNIE = 0;
                 PowerOn();                // Emit power on signal
-                delay_ms(500);            // Delay for some time to allow TV to turn on. This is an initial guess
+                //delay_ms(200);            // Delay for some time to allow TV to turn on. This is an initial guess
                 tvState = CHANNEL_MODE;   // Change to channel mode
+                IEC1bits.CNIE = 1;
+                CNFlag = 0;
                 break;
       
             case POWER_OFF:
+                DispString("Powering Off");
+                IEC1bits.CNIE = 0;
                 PowerOff();               // Emit power off signal
                 delay_ms(500);            // Delay for some time to allow TV to turn off. This is an initial guess
                 tvState = IDLE;            // Change to idle state
+                IEC1bits.CNIE = 1;
+                CNFlag = 0;
                 break;
       
             case CHANNEL_MODE:
-                if (CNflag)
+                if (CNFlag)
                 {
-                  CNflag = 0;
-                  PollCN();
+                    PollCN();
 
-                  if (ButtonPressed && ButtonPressed != BOTH)
+                  if (ButtonPressed == UP)
                   {
-                    delay_ms(80);
+                    Change_Channel(0);
+                  }
+                  else if (ButtonPressed == DOWN)
+                  {
                     Change_Channel(1);
                   }
-                  else if (ButtonPressed == BOTH)
-                  {
-                    delay_ms(80);
-                    PollLength();
+                  else if(ButtonPressed == BOTH) {
+                      delay_ms(80);
+                      PollLength();
                   }
                 }
                 else
@@ -156,26 +175,27 @@ int main(void) {
                 break;
             
             case VOLUME_MODE:
-              if (CNflag)
+              if (CNFlag)
               {
-                CNflag = 0;
-                PollCN();
+                 PollCN();
 
-                if (ButtonPressed && ButtonPressed != BOTH)
+                if (ButtonPressed == UP)
                 {
-                  delay_ms(80);
-                  Change_Volume();
+                  Change_Volume(0);
                 }
-                else if (ButtonPressed == BOTH)
+                else if (ButtonPressed == DOWN)
                 {
-                  delay_ms(80);
-                  PollLength();
+                  Change_Volume(1);
                 }
+                else if(ButtonPressed == BOTH) {
+                    delay_ms(80);
+                    PollLength();
+                }
+              }
                 else
                 {
                   Idle();
                 }
-              }
             break;
       
             default:

@@ -4,7 +4,7 @@
 #include "UART2.H"
 #include "States.h"
 
-volatile unsigned int CNFlag;
+
 
 void InitCN(void){
     TRISBbits.TRISB4 = 1;           //Set RB4 as input
@@ -13,7 +13,7 @@ void InitCN(void){
     CNEN1bits.CN0IE = 1;            //Enable CN0
     CNPD1bits.CN0PDE = 1;           //Pin CN0 pull down enable
     CNPD1bits.CN1PDE = 1;           //Pin CN1 pull down enable
-    IPC4bits.CNIP = 6;              //2nd Highest priority interrupt
+    IPC4bits.CNIP = 5;              //2nd Highest priority interrupt
     IFS1bits.CNIF = 0;              //Clear interrupt
     IEC1bits.CNIE = 1;              //Enables change notification interrupt
 }
@@ -26,15 +26,15 @@ void InitCN(void){
  */
 
 void PollCN (void){
-    
+    delay_ms(100);
     if(PB1 && PB2) {
         ButtonPressed = BOTH;
     }
     else if(PB1 && ~PB2) {           
-        ButtonPressed = PB1;
+        ButtonPressed = UP;
     }
     else if(PB2 && ~PB1) {                                        
-        ButtonPressed = PB2;
+        ButtonPressed = DOWN;
     }
 }
 
@@ -50,6 +50,7 @@ void __attribute__ ((interrupt, no_auto_psv)) _CNInterrupt(void){
     if(PB1 || PB2) {                    //If either button is pressed, set CNFlag to 1
         CNFlag = 1;
     }
+    
     
     IFS1bits.CNIF = 0;                  
 }

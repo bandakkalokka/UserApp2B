@@ -8,8 +8,8 @@
 volatile unsigned int main_timer_done;
 
 void InitTimer1(void) {
-    T3CONbits.TCKPS = 0b00;             //Set pre-scale to 1
-    T3CONbits.TCS = 0;                  //Use Internal Clock
+    T1CONbits.TCKPS = 0b00;             //Set pre-scale to 1
+    T1CONbits.TCS = 0;                  //Use Internal Clock
     
     IPC0bits.T1IP = 0b111;              //Set to highest priority
     IFS0bits.T1IF = 0;                  //Clear Flag status
@@ -17,10 +17,12 @@ void InitTimer1(void) {
 }
 
 
-void delay_ms(unsigned int time_ms) {                  
-    PR2 = (time_ms) * 16;           // Setting PR2
-    T2CONbits.TON = 1;                //Turn on Timer
+void delay_ms(unsigned int time_ms) {     
+    NewClk(32);
+    PR1 = (time_ms) * 16;           // Setting PR2
+    T1CONbits.TON = 1;                //Turn on Timer
     Idle();                         // Go into Idle mode   
+    NewClk(8);
     return;
 }
 //
