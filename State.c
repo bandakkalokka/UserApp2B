@@ -103,7 +103,13 @@ void PowerOff(void){
   digital_zero();
   
   delay_ms(50);
-    
+  LATAbits.LATA3 = 1;
+  delay_ms(200);  
+  LATAbits.LATA3 = 0;
+  delay_ms(200);
+  LATAbits.LATA3 = 1;
+  delay_ms(200);
+  LATAbits.LATA3 = 0;
 }
 void Change_Channel(unsigned char channel_dir){
   // TODO -- Put code for increasing channel
@@ -356,13 +362,17 @@ void PollLength(void){
       return;
     }
   }
-  if (tvState == CHANNEL_MODE)
+  if (tvState == CHANNEL_MODE) {
     tvState = VOLUME_MODE;
-  else
+    LATAbits.LATA3 = 1;         // Volume mode LED is ON
+    }
+    
+  else {
     tvState = CHANNEL_MODE;
-  
-  ButtonPressed = NONE;
-  CNFlag = 0;
+    LATAbits.LATA3 = 0;         // Channel mode LED is OFF
+    }
+    ButtonPressed = NONE;
+    CNFlag = 0;
 }
 
 void startbit(){

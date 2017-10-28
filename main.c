@@ -94,14 +94,13 @@ int main(void) {
     InitTimer2();
     InitTimer1();
     InitCN();
-    //InitOutComp();
-    TRISBbits.TRISB8 = 0;
-    TRISAbits.TRISA4 = 1;           // Configured as input
-    TRISBbits.TRISB4 = 1;           // Configured as input
-    TRISAbits.TRISA3 = 0;
+    TRISBbits.TRISB8 = 0;           // Configured as output PWM pin
+    TRISAbits.TRISA4 = 1;           // Configured as input button PB2
+    TRISBbits.TRISB4 = 1;           // Configured as input button PB1
+    TRISAbits.TRISA3 = 0;           // Configured as output LED (Indicate Volume/Channel mode change)
     LATAbits.LATA3 = 0;
     LATBbits.LATB8 = 0;
-    //LATAbits.LATA4 = 0;
+ 
     
     tvState = IDLE;
     ButtonPressed = NONE;
@@ -141,7 +140,7 @@ int main(void) {
                 break;
       
             case POWER_OFF:
-                DispString("Powering Off");
+                //DispString("Powering Off");
                 IEC1bits.CNIE = 0;
                 PowerOff();               // Emit power off signal
                 delay_ms(500);            // Delay for some time to allow TV to turn off. This is an initial guess
