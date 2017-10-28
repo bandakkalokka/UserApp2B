@@ -6,67 +6,155 @@
 
 
 void PowerOn(void){
-//  startbit();
+  startbit();
+  startbit();
   
-//  digital_one();
-//  digital_one();
-//  digital_one();
-//  digital_zero();
-//
-//  digital_zero();
-//  digital_zero();
-//  digital_zero();
-//  digital_zero();
-//
-//  digital_one();
-//  digital_one();
-//  digital_one();
-//  digital_zero();
-//
-//  digital_zero();
-//  digital_zero();
-//  digital_zero();
-//  digital_zero();
-//
-//  digital_zero();
-//  digital_one();
-//  digital_zero();
-//  digital_zero();
-//
-//  digital_zero();
-//  digital_zero();
-//  digital_zero();
-//  digital_zero();
-//
-//  digital_one();
-//  digital_zero();
-//  digital_one();
-//  digital_one();
-//
-//  digital_one();
-//  digital_one();
-//  digital_one();
-//  digital_one();
-//
-//  digital_zero();
-//  
-//  delay_ms(50);
+  digital_one();
+  digital_one();
+  digital_one();
+  digital_zero();
+
+  digital_zero();
+  digital_zero();
+  digital_zero();
+  digital_zero();
+
+  digital_one();
+  digital_one();
+  digital_one();
+  digital_zero();
+
+  digital_zero();
+  digital_zero();
+  digital_zero();
+  digital_zero();
+
+  digital_zero();
+  digital_one();
+  digital_zero();
+  digital_zero();
+
+  digital_zero();
+  digital_zero();
+  digital_zero();
+  digital_zero();
+
+  digital_one();
+  digital_zero();
+  digital_one();
+  digital_one();
+
+  digital_one();
+  digital_one();
+  digital_one();
+  digital_one();
+
+  digital_zero();
+  
+  delay_ms(50);
  
 }
 
 void PowerOff(void){
-  // TODO -- Put code for powering off
-  //DispString("Powering Off!"); 
-    delay_ms(50);
+    
+  startbit();
+  startbit();
+  
+  digital_one();
+  digital_one();
+  digital_one();
+  digital_zero();
+
+  digital_zero();
+  digital_zero();
+  digital_zero();
+  digital_zero();
+
+  digital_one();
+  digital_one();
+  digital_one();
+  digital_zero();
+
+  digital_zero();
+  digital_zero();
+  digital_zero();
+  digital_zero();
+
+  digital_zero();
+  digital_one();
+  digital_zero();
+  digital_zero();
+
+  digital_zero();
+  digital_zero();
+  digital_zero();
+  digital_zero();
+
+  digital_one();
+  digital_zero();
+  digital_one();
+  digital_one();
+
+  digital_one();
+  digital_one();
+  digital_one();
+  digital_one();
+
+  digital_zero();
+  
+  delay_ms(50);
     
 }
 void Change_Channel(unsigned char channel_dir){
   // TODO -- Put code for increasing channel
-    //DispString("Changing Channel");
     if(!channel_dir) {
         if(PB1) {                            //If PushButton1 is pressed
             delay_ms(80);
-            DispString("Channel UP!");
+
+            startbit();
+            startbit();
+            digital_one();
+            digital_one();
+            digital_one();
+            digital_zero();
+
+            digital_zero();
+            digital_zero();
+            digital_zero();
+            digital_zero();
+
+            digital_one();
+            digital_one();
+            digital_one();
+            digital_zero();
+
+            digital_zero();
+            digital_zero();
+            digital_zero();
+            digital_zero();            
+            
+            digital_zero();
+            digital_one();
+            digital_zero();
+            digital_zero();
+            
+            digital_one();
+            digital_zero();
+            digital_zero();
+            digital_zero();
+            
+            digital_one();
+            digital_zero();
+            digital_one();
+            digital_one();
+            
+            digital_zero();
+            digital_one();
+            digital_one();
+            digital_one();
+            
+            digital_zero();
+            
             delay_ms(50);
             delay_ms(80);
         }
@@ -78,7 +166,52 @@ void Change_Channel(unsigned char channel_dir){
     else {
         if(PB2) {                            //If PushButton2 is pressed
             delay_ms(80);
-            DispString("Channel DOWN!");
+            
+            startbit();
+            startbit();
+            digital_one();
+            digital_one();
+            digital_one();
+            digital_zero();
+
+            digital_zero();
+            digital_zero();
+            digital_zero();
+            digital_zero();
+
+            digital_one();
+            digital_one();
+            digital_one();
+            digital_zero();
+
+            digital_zero();
+            digital_zero();
+            digital_zero();
+            digital_zero(); 
+            
+            digital_zero();
+            digital_zero();
+            digital_zero();
+            digital_zero(); 
+            
+            digital_one();
+            digital_zero();
+            digital_zero();
+            digital_zero();
+            
+            digital_one();
+            digital_one();
+            digital_one();
+            digital_one(); 
+            
+            
+            digital_zero();
+            digital_one();
+            digital_one();
+            digital_one();
+            
+            digital_zero();
+            
             delay_ms(50);
             delay_ms(80);
         }
@@ -96,7 +229,51 @@ void Change_Volume(unsigned char volume_dir){
     if(!volume_dir) {
         if(PB1) {                            //If PushButton1 is pressed
             delay_ms(80);
-            DispString("Volume UP!");
+            
+            startbit();
+            startbit();
+            digital_one();
+            digital_one();
+            digital_one();
+            digital_zero();
+
+            digital_zero();
+            digital_zero();
+            digital_zero();
+            digital_zero();
+
+            digital_one();
+            digital_one();
+            digital_one();
+            digital_zero();
+
+            digital_zero();
+            digital_zero();
+            digital_zero();
+            digital_zero(); 
+            
+            digital_one();
+            digital_one();
+            digital_one();
+            digital_zero();
+
+            digital_zero();
+            digital_zero();
+            digital_zero();
+            digital_zero();
+
+            digital_zero();
+            digital_zero();
+            digital_zero();
+            digital_one();
+            
+            digital_one();
+            digital_one();
+            digital_one();
+            digital_one();
+ 
+            digital_zero();
+            
             delay_ms(50);
             delay_ms(80);
         }
@@ -108,7 +285,51 @@ void Change_Volume(unsigned char volume_dir){
     else {
         if(PB2) {                            //If PushButton2 is pressed
             delay_ms(80);
-            DispString("Volume DOWN!");
+            
+            startbit();
+            startbit();
+            digital_one();
+            digital_one();
+            digital_one();
+            digital_zero();
+
+            digital_zero();
+            digital_zero();
+            digital_zero();
+            digital_zero();
+
+            digital_one();
+            digital_one();
+            digital_one();
+            digital_zero();
+
+            digital_zero();
+            digital_zero();
+            digital_zero();
+            digital_zero(); 
+            
+            digital_one();
+            digital_one();
+            digital_zero();
+            digital_one();
+            
+            digital_zero();
+            digital_zero();
+            digital_zero();
+            digital_zero();
+            
+            digital_zero();
+            digital_zero();
+            digital_one();
+            digital_zero();
+            
+            digital_one();
+            digital_one();
+            digital_one();
+            digital_one();
+            
+            digital_zero();
+            
             delay_ms(50);
             delay_ms(80);
         }
@@ -146,7 +367,7 @@ void PollLength(void){
 
 void startbit(){
     
-   while(1){
+  while(1){
         if (timer_state)
             {
                 PR1 = START_BIT;
@@ -175,10 +396,10 @@ void startbit(){
                 {
                     timer_state = 1;
                     main_timer_done = 0;
-                    
                     break;
                 }
             }
+        //LATAbits.LATA4 ^= 1;
     }
 }
 

@@ -10,9 +10,9 @@
 
 #define START_BIT           18000
 #define IR_FREQ             6
-#define DIGITAL_ZERO        2200
-#define DIGITAL_ONE_HIGH    2200
-#define DIGITAL_ONE_LOW     6680
+#define DIGITAL_ZERO        2240
+#define DIGITAL_ONE_HIGH    2240
+#define DIGITAL_ONE_LOW     6760
 
 extern volatile unsigned int main_timer_done;
 extern volatile unsigned int timer_state;

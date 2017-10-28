@@ -131,7 +131,7 @@ int main(void) {
                 break;
       
             case POWER_ON:
-                DispString("Powering On!");
+                //DispString("Powering On!");
                 IEC1bits.CNIE = 0;
                 PowerOn();                // Emit power on signal
                 //delay_ms(200);            // Delay for some time to allow TV to turn on. This is an initial guess
@@ -151,6 +151,7 @@ int main(void) {
                 break;
       
             case CHANNEL_MODE:
+                //DispString("Channel Mode");
                 if (CNFlag)
                 {
                     PollCN();
@@ -175,6 +176,7 @@ int main(void) {
                 break;
             
             case VOLUME_MODE:
+                //DispString("Volume Mode");
               if (CNFlag)
               {
                  PollCN();
@@ -201,6 +203,7 @@ int main(void) {
             default:
                 tvState = POWER_OFF;
     }
+
   }
     return 0;
 }
