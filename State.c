@@ -6,7 +6,8 @@
 
 /*
  *  void PowerOn(void)
- *  This functions sends the PowerOn 
+ *  This functions sends the PowerOn signal (0xE0E040BF) to the TV.
+ *  The functions startbit(), digital_one() and digital_zero() are used
  */
 
 void PowerOn(void){
@@ -132,6 +133,8 @@ void PowerOff(void){
  *  This function sends the channel up (0xE0E048B7) and channel 
  *  down (0xE0E008F7) signals to the TV. The startbit(), 
  *  digital_one() and digital_zero() functions are used.
+ *  If channel_dir is 0 then channel is increasing
+ *  If channel dir is anything else, channel is decreasing
  */
 
 void Change_Channel(unsigned char channel_dir){
@@ -259,6 +262,8 @@ void Change_Channel(unsigned char channel_dir){
  *  This function sends the volume up (0xE0E0E01F) and volume 
  *  down (0xE0E0D02F) signals to the TV. The startbit(), 
  *  digital_one() and digital_zero() functions are used.
+ *  If volume_dir is 0 volume is increasing
+ *  If volume_dir is anything else volume is decreasing
  */
 
 void Change_Volume(unsigned char volume_dir){
@@ -376,10 +381,15 @@ void Change_Volume(unsigned char volume_dir){
     }
 }
 
-// Helper functions
+/*
+ *  void PollLength(void)
+ * 
+ *  Checks how long both buttons have been pressed for.
+ */
+
 void PollLength(void){
   unsigned int count = 0;
-  while (PB1 && PB2)            // while both buttons are pressed check how long they are pressed for 
+  while (PB1 && PB2)            // while both buttons are pressed check how long they are pressed for, 
   {                             // if they are pressed for longer than 3 seconds, turn off TV 
     delay_ms(300);              // else change mode between channel and volume
     count++;

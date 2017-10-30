@@ -25,14 +25,13 @@ void delay_ms(unsigned int time_ms) {
     NewClk(8);
     return;
 }
-//
-//
+
+
 void delay_us1(unsigned int time_us) {
         PR1 = time_us;                    // Setting PR2 
         T1CONbits.TON = 1;                // Turn on Timer
         delay_us2(IR_FREQ);
         main_timer_done = 0;
-    //return;
 }
 
 

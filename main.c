@@ -16,8 +16,7 @@
 #include "Timer1.h"
 #include "States.h"
 #include "IO.h"
-#include "UART2.H"
-#include "Output-Compare.h"
+
 
 #include "ChangeClk.h"
 
@@ -130,17 +129,14 @@ int main(void) {
                 break;
       
             case POWER_ON:
-                //DispString("Powering On!");
                 IEC1bits.CNIE = 0;
                 PowerOn();                // Emit power on signal
-                //delay_ms(200);            // Delay for some time to allow TV to turn on. This is an initial guess
                 tvState = CHANNEL_MODE;   // Change to channel mode
                 IEC1bits.CNIE = 1;
                 CNFlag = 0;
                 break;
       
             case POWER_OFF:
-                //DispString("Powering Off");
                 IEC1bits.CNIE = 0;
                 PowerOff();               // Emit power off signal
                 delay_ms(500);            // Delay for some time to allow TV to turn off. This is an initial guess
@@ -150,18 +146,17 @@ int main(void) {
                 break;
       
             case CHANNEL_MODE:
-                //DispString("Channel Mode");
                 if (CNFlag)
                 {
                     PollCN();
 
                   if (ButtonPressed == UP)
                   {
-                    Change_Channel(0);
+                    Change_Channel(0);                  // Channel UP
                   }
                   else if (ButtonPressed == DOWN)
                   {
-                    Change_Channel(1);
+                    Change_Channel(1);                  // Channel DOWN
                   }
                   else if(ButtonPressed == BOTH) {
                       delay_ms(80);
@@ -175,18 +170,17 @@ int main(void) {
                 break;
             
             case VOLUME_MODE:
-                //DispString("Volume Mode");
               if (CNFlag)
               {
                  PollCN();
 
                 if (ButtonPressed == UP)
                 {
-                  Change_Volume(0);
+                  Change_Volume(0);                     //Volume UP
                 }
                 else if (ButtonPressed == DOWN)
                 {
-                  Change_Volume(1);
+                  Change_Volume(1);                     //Volume DOWN
                 }
                 else if(ButtonPressed == BOTH) {
                     delay_ms(80);
@@ -200,7 +194,7 @@ int main(void) {
             break;
       
             default:
-                tvState = POWER_OFF;
+                tvState = IDLE;
     }
 
   }

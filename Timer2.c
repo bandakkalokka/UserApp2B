@@ -15,21 +15,13 @@ void InitTimer2(void) {
 }
 
 
-//void delay_ms(unsigned int time_ms) {                  
-//    PR2 = (time_ms) * 16;           // Setting PR2
-//    T2CONbits.TON = 1;                //Turn on Timer
-//    Idle();                         // Go into Idle mode   
-//    return;
-//}
 
 
 void delay_us2(unsigned int time_us) {
-        //NewClk(8);
     
         PR2 = time_us;                  // Setting PR2 
         
         T2CONbits.TON = 1;                // Turn on Timer
-    //return;
 }
 
 
@@ -38,7 +30,6 @@ void __attribute__((interrupt, no_auto_psv)) _T2Interrupt(void)
 {
     IFS0bits.T2IF = 0;                //Clear Flag status
     T2CONbits.TON = 0;                //Turn off timer
-    //IFS0bits.OC1IF = 0;
      TMR2 = 0;
                             // Clear TMR2 register
 }
