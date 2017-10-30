@@ -4,9 +4,13 @@
 #include <p24F16KA101.h>
 #include "IO.h"
 
+/*
+ *  void PowerOn(void)
+ *  This functions sends the PowerOn 
+ */
 
 void PowerOn(void){
-  startbit();
+  startbit();               // The startbit is sent twice, because the first transmission does not happen
   startbit();
   
   digital_one();
@@ -55,9 +59,19 @@ void PowerOn(void){
  
 }
 
+
+/*
+ *  void PowerOff(void)
+ * 
+ *  This function sends Power Off signal (0xE0E040BF) to the TV.
+ *  Note that separate functions are used to Power On and Power Off 
+ *  because of the use of the LED (to indicate mode). The startbit(), 
+ *  digital_one() and digital_zero() functions are used.
+ */
+
 void PowerOff(void){
     
-  startbit();
+  startbit();           // The startbit is sent twice, because the first transmission does not happen
   startbit();
   
   digital_one();
@@ -103,7 +117,7 @@ void PowerOff(void){
   digital_zero();
   
   delay_ms(50);
-  LATAbits.LATA3 = 1;
+  LATAbits.LATA3 = 1;           // When power is turned off blink the LED
   delay_ms(200);  
   LATAbits.LATA3 = 0;
   delay_ms(200);
@@ -111,13 +125,21 @@ void PowerOff(void){
   delay_ms(200);
   LATAbits.LATA3 = 0;
 }
+
+/*
+ *  void Change_Channel(unsigned char channel_dir)
+ * 
+ *  This function sends the channel up (0xE0E048B7) and channel 
+ *  down (0xE0E008F7) signals to the TV. The startbit(), 
+ *  digital_one() and digital_zero() functions are used.
+ */
+
 void Change_Channel(unsigned char channel_dir){
-  // TODO -- Put code for increasing channel
     if(!channel_dir) {
         if(PB1) {                            //If PushButton1 is pressed
             delay_ms(80);
 
-            startbit();
+            startbit();                       // The startbit is sent twice, because the first transmission does not happen
             startbit();
             digital_one();
             digital_one();
@@ -173,7 +195,7 @@ void Change_Channel(unsigned char channel_dir){
         if(PB2) {                            //If PushButton2 is pressed
             delay_ms(80);
             
-            startbit();
+            startbit();                     // The startbit is sent twice, because the first transmission does not happen
             startbit();
             digital_one();
             digital_one();
@@ -228,15 +250,23 @@ void Change_Channel(unsigned char channel_dir){
     }
     
      delay_ms(50);
-  // TODO -- Put code for decreasing channel
 }
+
+
+/*
+ *  void Change_Volume(unsigned char volume_dir)
+ * 
+ *  This function sends the volume up (0xE0E0E01F) and volume 
+ *  down (0xE0E0D02F) signals to the TV. The startbit(), 
+ *  digital_one() and digital_zero() functions are used.
+ */
+
 void Change_Volume(unsigned char volume_dir){
-    //DispString("Change Volume!");
     if(!volume_dir) {
         if(PB1) {                            //If PushButton1 is pressed
             delay_ms(80);
             
-            startbit();
+            startbit();                      //The startbit is sent twice, because the first transmission does not happen
             startbit();
             digital_one();
             digital_one();
@@ -292,7 +322,7 @@ void Change_Volume(unsigned char volume_dir){
         if(PB2) {                            //If PushButton2 is pressed
             delay_ms(80);
             
-            startbit();
+            startbit();                     // The startbit is sent twice, because the first transmission does not happen
             startbit();
             digital_one();
             digital_one();
@@ -349,9 +379,9 @@ void Change_Volume(unsigned char volume_dir){
 // Helper functions
 void PollLength(void){
   unsigned int count = 0;
-  while (PB1 && PB2)
-  {
-    delay_ms(300);
+  while (PB1 && PB2)            // while both buttons are pressed check how long they are pressed for 
+  {                             // if they are pressed for longer than 3 seconds, turn off TV 
+    delay_ms(300);              // else change mode between channel and volume
     count++;
 
     if (count >= 10)
@@ -362,18 +392,25 @@ void PollLength(void){
       return;
     }
   }
-  if (tvState == CHANNEL_MODE) {
+  if (tvState == CHANNEL_MODE) {       //If the current state is CHANNEL_MODE change to VOLUME_MODE
     tvState = VOLUME_MODE;
-    LATAbits.LATA3 = 1;         // Volume mode LED is ON
+    LATAbits.LATA3 = 1;                // Volume mode LED is ON
     }
     
   else {
-    tvState = CHANNEL_MODE;
-    LATAbits.LATA3 = 0;         // Channel mode LED is OFF
+    tvState = CHANNEL_MODE;            //If the current state is VOLUME_MODE change to CHANNEL_MODE 
+    LATAbits.LATA3 = 0;                // Channel mode LED is OFF
     }
     ButtonPressed = NONE;
     CNFlag = 0;
 }
+
+/*
+ *  void startbit() 
+ * 
+ *  This function generates one pulse of 4.6ms HIGH 
+ *  and 4.6ms LOW with a carrier frequency of 38kHz. This is the startbit.
+ */
 
 void startbit(){
     
@@ -409,9 +446,16 @@ void startbit(){
                     break;
                 }
             }
-        //LATAbits.LATA4 ^= 1;
     }
 }
+
+/*
+ *Void digital_zero(void)
+ * 
+ * This function generates a 0.56ms HIGH and 
+ * 0.56ms LOW pulse with a carrier frequency of 
+ * 38kHz. This is a digital zero.
+ */
 
 void digital_zero(void) {
     while(1){
@@ -449,6 +493,14 @@ void digital_zero(void) {
     }
 }
 
+/*
+ *Void digital_one(void)
+ * 
+ * This function generates a 0.56ms HIGH and 
+ * 1.69ms LOW pulse with a carrier frequency of 
+ * 38kHz. This is a digital one.
+ */
+
 void digital_one(void){
     while(1){
         if (timer_state)
@@ -482,6 +534,5 @@ void digital_one(void){
                     break;
                 }
             }
-        //LATAbits.LATA4 ^= 1;
     }
 }
