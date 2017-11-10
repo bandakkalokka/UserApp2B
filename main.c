@@ -13,9 +13,8 @@
 #include <math.h>
 #include <errno.h>
 #include "Timer2.h"
-#include "Timer1.h"
-#include "States.h"
-#include "IO.h"
+#include "UART2.H"
+#include "Input-Capture.h"
 
 
 #include "ChangeClk.h"
@@ -66,11 +65,9 @@
 
 // GLOBAL VARIABLES
 unsigned int temp;
-unsigned int i;
-volatile unsigned int timer_state = 1;
-volatile ButtonPress ButtonPressed;     // Variable indicates which button was pressed. 0 - None. 1 - PB1. 2 - PB2. 3 - Both.
-volatile TvOperation tvState;           // Variable indicated the current operation mode of the TV
-volatile unsigned int CNFlag;
+volatile TvState STATE = READ;
+volatile unsigned int CNFlag = 0;
+volatile unsigned int ICFlag = 0;
 
 // MACROS
 #define Nop() {__asm__ volatile ("nop");}
@@ -89,115 +86,95 @@ int main(void) {
     REFOCONbits.RODIV = 0b0000;
      
     // Switch clock: 32 for 32kHz, 500 for 500 kHz, 8 for 8MHz 
+    i = 0;
+    
     NewClk(8); //
     InitTimer2();
-    InitTimer1();
-    InitCN();
-    TRISBbits.TRISB8 = 0;           // Configured as output PWM pin
-    TRISAbits.TRISA4 = 1;           // Configured as input button PB2
-    TRISBbits.TRISB4 = 1;           // Configured as input button PB1
-    TRISAbits.TRISA3 = 0;           // Configured as output LED (Indicate Volume/Channel mode change)
-    LATAbits.LATA3 = 0;
+    InitInComp();
+    TRISBbits.TRISB8 = 0;           // Configured as output LED pin
     LATBbits.LATB8 = 0;
- 
     
-    tvState = IDLE;
-    ButtonPressed = NONE;
-    CNFlag = 0;
-    main_timer_done = 0;
-    
-    
-    while(1)
-    {
-        switch (tvState)
-        {
-            case IDLE:
+    while(1) {
+        switch(STATE) {
+            
+            case READ:
+                if(IC1CONbits.ICBNE) {
+                    LATBbits.LATB8 = 1;
+                    IC1CONbits.ICM = 0;                     //Reset the Buffer
+                    IC1CONbits.ICM = 0b010;
+                }
+                
+                
                 if (CNFlag)
-                { 
-                  delay_ms(100);
-                  PollCN();
-                  CNFlag = 0;
-                  if (ButtonPressed == BOTH)
-                  {
-                    tvState = POWER_ON;
-                    ButtonPressed = NONE;
-                  }
+                {
+                    
+                    IFS0bits.IC1IF = 0;         //Set Flag status bit to 0 of Input-Compare
+                    IEC0bits.IC1IE = 0;         //Disable the interrupt
+                    
+                    T2CONbits.TON  = 0;         //Turn off timer
+                    
+                    IFS0bits.T2IF = 0;          //Clear Flag status of Timer 2
+                    IEC0bits.T2IE = 0;          //Disable the Timer2 interrupts
+                    STATE = CHECK;
+                    i = 1;                      // Set to 1 to ignore first garbage value
+                    CNFlag = 0;
+                }
+                else
+                {
+                    Idle();
+                    
+                }
+                break;
+                
+                
+            case CHECK:
+                CHECKCOMMAND = 0;
+                CHECKCOMMAND = checkCommand();
+                
+                if(CHECKCOMMAND == CHANNEL_UP) {
+                    DispString("Channel Up!");
+                }
+                else if(CHECKCOMMAND == CHANNEL_DOWN) {
+                    DispString("Channel Down!");
+                }
+                else if(CHECKCOMMAND == VOLUME_UP) {
+                    DispString("Volume Up!");
+                }
+                else if(CHECKCOMMAND == VOLUME_DOWN) {
+                    DispString("Volume Down!");
+                }
+                else if(CHECKCOMMAND == POWER) {
+                    DispString("Power On/Off!");
                 }
                 else {
-                    Sleep();
+                    DispString("Invalid Command!");
                 }
-                break;
-      
-            case POWER_ON:
-                IEC1bits.CNIE = 0;
-                PowerOn();                // Emit power on signal
-                tvState = CHANNEL_MODE;   // Change to channel mode
-                IEC1bits.CNIE = 1;
-                CNFlag = 0;
-                break;
-      
-            case POWER_OFF:
-                IEC1bits.CNIE = 0;
-                PowerOff();               // Emit power off signal
-                delay_ms(500);            // Delay for some time to allow TV to turn off. This is an initial guess
-                tvState = IDLE;            // Change to idle state
-                IEC1bits.CNIE = 1;
-                CNFlag = 0;
-                break;
-      
-            case CHANNEL_MODE:
-                if (CNFlag)
-                {
-                    PollCN();
-
-                  if (ButtonPressed == UP)
-                  {
-                    Change_Channel(0);                  // Channel UP
-                  }
-                  else if (ButtonPressed == DOWN)
-                  {
-                    Change_Channel(1);                  // Channel DOWN
-                  }
-                  else if(ButtonPressed == BOTH) {
-                      delay_ms(80);
-                      PollLength();
-                  }
-                }
-                else
-                {
-                  Idle();
-                }
-                break;
             
-            case VOLUME_MODE:
-              if (CNFlag)
-              {
-                 PollCN();
-
-                if (ButtonPressed == UP)
-                {
-                  Change_Volume(0);                     //Volume UP
+                STATE = RESET;
+                i = 0;
+                
+                break;
+                
+                
+            case RESET:
+                TMRVAL[i] = 0;
+                i++;
+                
+                if(i == LENGTH){
+                    STATE = READ;
+                    DispString("");
+                    i = 0;
+                    IC1BUF = 0xFFFF;
+                    IEC0bits.T2IE = 1;                //Enable the Timer2 interrupts
+                    IEC0bits.IC1IE = 1;               //Enable Input-Compare interrupt   
                 }
-                else if (ButtonPressed == DOWN)
-                {
-                  Change_Volume(1);                     //Volume DOWN
-                }
-                else if(ButtonPressed == BOTH) {
-                    delay_ms(80);
-                    PollLength();
-                }
-              }
-                else
-                {
-                  Idle();
-                }
-            break;
-      
+                break; 
+                
             default:
-                tvState = IDLE;
+                STATE = READ;
+                break;
+        }
     }
-
-  }
     return 0;
 }
 

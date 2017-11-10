@@ -11,8 +11,8 @@ void InitCN(void){
     TRISAbits.TRISA4 = 1;           //Set RA4 as input
     CNEN1bits.CN1IE = 1;            //Enable CN1
     CNEN1bits.CN0IE = 1;            //Enable CN0
-    CNPD1bits.CN0PDE = 1;           //Pin CN0 pull down enable
-    CNPD1bits.CN1PDE = 1;           //Pin CN1 pull down enable
+    CNPD1bits.CN0PDE = 0;           //Pin CN0 pull down enable
+    CNPD1bits.CN1PDE = 0;           //Pin CN1 pull down enable
     IPC4bits.CNIP = 5;              //2nd Highest priority interrupt
     IFS1bits.CNIF = 0;              //Clear interrupt
     IEC1bits.CNIE = 1;              //Enables change notification interrupt
@@ -47,11 +47,10 @@ void PollCN (void){
  */
 void __attribute__ ((interrupt, no_auto_psv)) _CNInterrupt(void){
     
-    if(PB1 || PB2) {                    //If either button is pressed, set CNFlag to 1
+                      //If either button is pressed, set CNFlag to 1
         CNFlag = 1;
-    }
     
     
-    IFS1bits.CNIF = 0;                  
+    IFS1bits.CNIF = 0;                  //Clear CN interrupt flag      
 }
 

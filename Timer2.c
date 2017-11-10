@@ -29,7 +29,7 @@ void delay_us2(unsigned int time_us) {
 void __attribute__((interrupt, no_auto_psv)) _T2Interrupt(void)
 {
     IFS0bits.T2IF = 0;                //Clear Flag status
-    T2CONbits.TON = 0;                //Turn off timer
-     TMR2 = 0;
+    //T2CONbits.TON = 0;                //Turn off timer
+     //TMR2 = 0;
                             // Clear TMR2 register
 }

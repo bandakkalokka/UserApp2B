@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-
+#define IR1     PORTBbits.RB8
 
 
 #ifdef	__cplusplus
